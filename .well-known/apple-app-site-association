@@ -1,0 +1,11 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "XCG59SXJXA.com.golive.party",
+                "paths": ["*"]
+            }
+        ]
+    }
+}
