@@ -5,6 +5,10 @@
             {
                 "appID": "XCG59SXJXA.com.golive.party",
                 "paths": ["*"]
+            },
+            {
+                "appID": "XCG59SXJXA.com.turing.liveplus",
+                "paths": ["*"]
             }
         ]
     }
