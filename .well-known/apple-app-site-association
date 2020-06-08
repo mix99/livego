@@ -9,6 +9,10 @@
             {
                 "appID": "XCG59SXJXA.com.turing.liveplus",
                 "paths": ["*"]
+            },
+            {
+                "appID": "XCG59SXJXA.com.live.asmr",
+                "paths": ["/inv/*"]
             }
         ]
     }
