@@ -13,12 +13,40 @@
     <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
     <script src="resources/scripts/prototypePre.js"></script>
     <script src="data/document.js"></script>
-    <script src="resources/scripts/prototypePost.js"></script>
+<!--    <script src="resources/scripts/prototypePost.js"></script>-->
     <script src="files/home/data.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.0.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+
     <script type="text/javascript">
       $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
       $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
       $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+
+      function voucherClick(tag) {
+        switch (tag) {
+          case 0:
+            console.log("0");
+            break;
+          case 1:
+            console.log("1");
+            break;
+          case 2:
+            console.log("2");
+            break;
+          case 3:
+            console.log("3");
+            break;
+          case 4:
+            console.log("4");
+            break;
+        }
+        // $('#myModal').on('show.bs.modal', function (event) {
+        //
+        // });
+        $('#myModal').modal('show');
+      }
+
     </script>
   </head>
   <body>
@@ -31,28 +59,38 @@
 
       <!-- Unnamed (Image) -->
       <div id="u1" class="ax_default image">
-        <img id="u1_img" class="img " src="images/home/u1.png"/>
+        <img id="u1_img" class="img " src="images/home/u1.png" onclick="voucherClick(0)" />
       </div>
 
       <!-- Unnamed (Image) -->
       <div id="u2" class="ax_default image">
-        <img id="u2_img" class="img " src="images/home/u2.png"/>
+        <img id="u2_img" class="img " src="images/home/u2.png" onclick="voucherClick(1)" />
       </div>
 
       <!-- Unnamed (Image) -->
       <div id="u3" class="ax_default image">
-        <img id="u3_img" class="img " src="images/home/u3.png"/>
+        <img id="u3_img" class="img " src="images/home/u3.png" onclick="voucherClick(2)" />
       </div>
 
       <!-- Unnamed (Image) -->
       <div id="u4" class="ax_default image">
-        <img id="u4_img" class="img " src="images/home/u4.png"/>
+        <img id="u4_img" class="img " src="images/home/u4.png" onclick="voucherClick(3)" />
       </div>
 
       <!-- Unnamed (Image) -->
       <div id="u5" class="ax_default image">
-        <img id="u5_img" class="img " src="images/home/u5.png"/>
+        <img id="u5_img" class="img " src="images/home/u5.png" onclick="voucherClick(4)" />
       </div>
     </div>
+
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="myModal" aria-labelledby="mySmallModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          ...
+        </div>
+      </div>
+    </div>
+
   </body>
 </html>
