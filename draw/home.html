@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
   <head>
-    <title>Home</title>
+    <title>Diamond Vouches</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -63,18 +63,18 @@
     </div>
 
 
-    <div class="modal" id="myModal" style="background-color: black; max-width: 80%">
+    <div class="modal" id="myModal" style="background-color: black; max-width: 85%">
       <div class="modal-content">
         <p style="font-size: 430%; font-weight: bold; color: white; text-align: center; margin-top: 60px">Congratulations!</p>
       </div>
       <div class="modal-content">
-        <p id="detailP" style="font-size: 360%; font-weight: bold; color: white; text-align: center; margin-top: 60px"></p>
+        <p id="detailP" style="font-size: 300%; font-weight: bold; color: white; text-align: center; margin-top: 60px"></p>
       </div>
       <div class="pay-button-wrapper" id="detailD">
       </div>
     </div>
 
-    <div class="modal" id="paymentModal" style="background-color: white; max-width: 80%">
+    <div class="modal" id="paymentModal" style="background-color: white; max-width: 85%">
       <div class="modal-content">
         <form id="payment-form">
           <div id="card-element" style="margin-bottom: 60px; margin-top: 60px; margin-left: 40px; margin-right: 40px">
@@ -131,7 +131,7 @@
         }
         return theRequest;
     }
-    var token = theRequest.id;
+    var token = GetRequest().id;
 
     var elements = stripe.elements();
     var style = {
@@ -157,19 +157,19 @@
       var detailPStr = "";
       switch (tag) {
         case 0:
-          detailPStr = "You get a 10% off discount voucher! You can use it to purchase 1000 Diamonds with just $9.";
+          detailPStr = "You get a 10% off discount voucher! </br>You can use it to purchase 1000 Diamonds with just $9.";
           break;
         case 1:
-          detailPStr = "You get a 15% off discount voucher! You can use it to purchase 2000 Diamonds with just $17.";
+          detailPStr = "You get a 15% off discount voucher! </br>You can use it to purchase 2000 Diamonds with just $17.";
           break;
         case 2:
-          detailPStr = "You get a 20% off discount voucher! You can use it to purchase 5000 Diamonds with just $40.";
+          detailPStr = "You get a 20% off discount voucher! </br>You can use it to purchase 5000 Diamonds with just $40.";
           break;
         case 3:
-          detailPStr = "You get a 25% off discount voucher! You can use it to purchase 10000 Diamonds with just $75.";
+          detailPStr = "You get a 25% off discount voucher! </br>You can use it to purchase 10000 Diamonds with just $75.";
           break;
         case 4:
-          detailPStr = "You get a 30% off discount voucher! You can use it to purchase 20000 Diamonds with just $140.";
+          detailPStr = "You get a 30% off discount voucher! </br>You can use it to purchase 20000 Diamonds with just $140.";
           break;
       }
       $("#detailP").html(detailPStr);
