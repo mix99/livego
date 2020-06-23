@@ -92,9 +92,18 @@
 
     <div class="modal" id="messageModal" style="background-color: black">
       <div class="modal-content">
-        <p id="messageP" style="font-size: 60px; font-weight: bold; color: white; text-align: center">Congratulations!</p>
+        <p id="messageP" style="font-size: 60px; font-weight: bold; color: white; text-align: center"></p>
       </div>
     </div>
+
+    <div class="modal" id="successModal" style="background-color: black">
+    <div class="modal-content">
+      <p style="font-size: 430%; font-weight: bold; color: white; text-align: center">Payment Success!</p>
+    </div>
+    <div class="modal-content">
+        <p id="successModalP" style="font-size: 300%; font-weight: bold; color: white; text-align: center; margin-top: 60px">Check Diamonds in your wallet.</p>
+      </div>
+  </div>
 
   </body>
 
@@ -231,7 +240,7 @@
                   showMessage(result.error.message);
                 } else {
                   if (result.paymentIntent.status === 'succeeded') {
-                    showMessage('Success!');
+                    showSuccess();
                   }
                 }
               });
@@ -243,6 +252,14 @@
           showMessage('Net Error');
         }
       });
+    }
+
+    function showSuccess() {
+      $("#successModal").modal({
+        showClose: false,
+        fadeDuration: 100
+      });
+      setTimeout(function () { $.modal.close(); }, 3000);
     }
 
     function showMessage(message) {
