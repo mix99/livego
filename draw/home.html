@@ -74,19 +74,18 @@
       </div>
     </div>
 
-    <div class="modal" id="paymentModal" style="background-color: white">
+    <div class="modal" id="paymentModal" style="background-color: white; max-width: 75%">
       <div class="modal-content">
         <form id="payment-form">
-          <div id="card-element" style="margin-bottom: 30px; margin-top: 20px">
+          <div id="card-element" style="margin-bottom: 60px; margin-top: 60px; margin-left: 40px; margin-right: 40px">
             <!-- Elements will create input elements here -->
           </div>
-          <div id="cvc-element" style="margin-bottom: 30px">
+          <div id="cvc-element" style="margin-bottom: 60px; margin-left: 40px; margin-right: 40px">
           </div>
-          <div id="exp-element" style="margin-bottom: 30px">
+          <div id="exp-element" style="margin-bottom: 60px; margin-left: 40px; margin-right: 40px">
           </div>
           <div id="card-errors" role="alert"></div>
-
-          <button id="submit" class="purchaseButton" style="margin-top: 60px;">Pay Now</button>
+          <button id="submit" class="purchaseButton" style="margin-top: 80px;">Pay Now</button>
         </form>
       </div>
     </div>
@@ -138,7 +137,7 @@
     var style = {
       base: {
         color: "#32325d",
-        fontSize: "30px",
+        fontSize: "50px",
         height: "60px",
       }
     };
@@ -217,7 +216,8 @@
           if (data.status == 0) {
             clients = data.data;
             $("#paymentModal").modal({
-              fadeDuration: 100
+            	showClose: false,
+              	fadeDuration: 100
             });
             var form = document.getElementById('payment-form');
             form.addEventListener('submit', function(ev) {
@@ -248,6 +248,7 @@
     function showMessage(message) {
       $("#messageP").text(message);
       $("#messageModal").modal({
+      	showClose: false,
         fadeDuration: 100
       });
       setTimeout(function () { $.modal.close(); }, 3000);
