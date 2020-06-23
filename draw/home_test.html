@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>Diamond Vouches</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/home/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/prototypePre.js"></script>
+    <script src="data/document.js"></script>
+<!--    <script src="resources/scripts/prototypePost.js"></script>-->
+    <script src="files/home/data.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- Unnamed (Image) -->
+      <div id="u0" class="ax_default image">
+        <img id="u0_img" class="img " src="images/home/u0.jpg"/>
+      </div>
+
+      <!-- Unnamed (Image) -->
+      <div id="u1" class="ax_default image">
+        <img id="u1_img" class="img " src="images/home/u1.png" onclick="voucherClick(0)" />
+      </div>
+
+      <!-- Unnamed (Image) -->
+      <div id="u2" class="ax_default image">
+        <img id="u2_img" class="img " src="images/home/u2.png" onclick="voucherClick(1)" />
+      </div>
+
+      <!-- Unnamed (Image) -->
+      <div id="u3" class="ax_default image">
+        <img id="u3_img" class="img " src="images/home/u3.png" onclick="voucherClick(2)" />
+      </div>
+
+      <!-- Unnamed (Image) -->
+      <div id="u4" class="ax_default image">
+        <img id="u4_img" class="img " src="images/home/u4.png" onclick="voucherClick(3)" />
+      </div>
+
+      <!-- Unnamed (Image) -->
+      <div id="u5" class="ax_default image">
+        <img id="u5_img" class="img " src="images/home/u5.png" onclick="voucherClick(4)" />
+      </div>
+    </div>
+
+
+    <div class="modal" id="myModal" style="background-color: black; max-width: 85%">
+      <div class="modal-content">
+        <p style="font-size: 430%; font-weight: bold; color: white; text-align: center; margin-top: 60px">Congratulations!</p>
+      </div>
+      <div class="modal-content">
+        <p id="detailP" style="font-size: 300%; font-weight: bold; color: white; text-align: center; margin-top: 60px"></p>
+      </div>
+      <div class="pay-button-wrapper" id="detailD">
+      </div>
+    </div>
+
+    <div class="modal" id="paymentModal" style="background-color: white; max-width: 85%">
+      <div class="modal-content">
+        <form id="payment-form">
+          <div id="card-element" style="margin-bottom: 60px; margin-top: 60px; margin-left: 40px; margin-right: 40px">
+            <!-- Elements will create input elements here -->
+          </div>
+          <div id="cvc-element" style="margin-bottom: 60px; margin-left: 40px; margin-right: 40px">
+          </div>
+          <div id="exp-element" style="margin-bottom: 60px; margin-left: 40px; margin-right: 40px">
+          </div>
+          <div id="card-errors" role="alert"></div>
+          <button id="submit" class="purchaseButton" style="margin-top: 80px;">Pay Now</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal" id="messageModal" style="background-color: black">
+      <div class="modal-content">
+        <p id="messageP" style="font-size: 60px; font-weight: bold; color: white; text-align: center"></p>
+      </div>
+    </div>
+
+    <div class="modal" id="successModal" style="background-color: black">
+    <div class="modal-content">
+      <p style="font-size: 430%; font-weight: bold; color: white; text-align: center">Payment Success!</p>
+    </div>
+    <div class="modal-content">
+        <p id="successModalP" style="font-size: 300%; font-weight: bold; color: white; text-align: center; margin-top: 60px">Check Diamonds in your wallet.</p>
+      </div>
+  </div>
+
+  </body>
+
+  <style>
+    .purchaseButton {
+      background-color: blueviolet;
+      text-font: 38px;
+      color: white;
+      display: block;
+      width: 80%;
+      height: 120px;
+      margin: 50px auto;
+      font-size: 50px;
+      font-weight: 600;
+      border-radius: 8px
+    }
+  </style>
+
+  <script type="text/javascript">
+
+    var baseUrl = "https://api.liveapp.xyz/";
+
+    var stripe = Stripe('pk_live_Zt23ptBqWWJ8as6k2MBUF3xn00XviuaLpZ');
+
+    function GetRequest() {
+        var url = location.search;
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+    var token = GetRequest().id;
+
+    var elements = stripe.elements();
+    var style = {
+      base: {
+        color: "#32325d",
+        fontSize: "50px",
+        height: "60px",
+      }
+    };
+    var card = elements.create("cardNumber", { style: style });
+    var cardCvc = elements.create("cardCvc", { style });
+    var cardExpiry = elements.create("cardExpiry", { style });
+
+    card.mount("#card-element");
+    cardCvc.mount("#cvc-element");
+    cardExpiry.mount("#exp-element");
+
+    var pid = "";
+    var clients = "";
+    var from = "";
+
+    function voucherClick(tag) {
+      var detailPStr = "";
+      switch (tag) {
+        case 0:
+          detailPStr = "You get a 10% off discount voucher! </br>You can use it to purchase 1000 Diamonds with just $9.";
+          break;
+        case 1:
+          detailPStr = "You get a 15% off discount voucher! </br>You can use it to purchase 2000 Diamonds with just $17.";
+          break;
+        case 2:
+          detailPStr = "You get a 20% off discount voucher! </br>You can use it to purchase 5000 Diamonds with just $40.";
+          break;
+        case 3:
+          detailPStr = "You get a 25% off discount voucher! </br>You can use it to purchase 10000 Diamonds with just $75.";
+          break;
+        case 4:
+          detailPStr = "You get a 30% off discount voucher! </br>You can use it to purchase 20000 Diamonds with just $140.";
+          break;
+      }
+      showSuccess();
+    }
+
+    function purchase(tag) {
+      switch (tag) {
+        case 0:
+          pid = "com.livemeet.web.1000d";
+          break;
+        case 1:
+          pid = "com.livemeet.web.2000d";
+          break;
+        case 2:
+          pid = "com.livemeet.web.5000d";
+          break;
+        case 3:
+          pid = "com.livemeet.web.10000d";
+          break;
+        case 4:
+          pid = "com.livemeet.web.20000d";
+          break;
+      }
+      $.modal.close();
+
+      $.ajax({
+        method: 'post',
+        url: baseUrl + 'vFun/stripe/payment/init',
+        headers: {
+          authorization: token
+        },
+        data: JSON.stringify({
+          productId: pid,
+          type: 1
+        }),
+        contentType:'application/json',
+        dataType: 'json',
+        success: function (data) {
+          if (data.status == 0) {
+            clients = data.data;
+            $("#paymentModal").modal({
+            	showClose: false,
+              	fadeDuration: 100
+            });
+            var form = document.getElementById('payment-form');
+            form.addEventListener('submit', function(ev) {
+              ev.preventDefault();
+              stripe.confirmCardPayment(clients, {
+                payment_method: {
+                  card: card,
+                }
+              }).then(function(result) {
+                if (result.error) {
+                  showMessage(result.error.message);
+                } else {
+                  if (result.paymentIntent.status === 'succeeded') {
+                    showSuccess();
+                  }
+                }
+              });
+            });
+          } else {
+            showMessage(data.msg);
+          }
+        }, error: function () {
+          showMessage('Net Error');
+        }
+      });
+    }
+
+    function showSuccess() {
+      $("#successModal").modal({
+        showClose: false,
+        fadeDuration: 100
+      });
+      setTimeout(function () { $.modal.close(); }, 3000);
+    }
+
+    function showMessage(message) {
+      $("#messageP").text(message);
+      $("#messageModal").modal({
+      	showClose: false,
+        fadeDuration: 100
+      });
+      setTimeout(function () { $.modal.close(); }, 3000);
+    }
+
+  </script>
+
+</html>
