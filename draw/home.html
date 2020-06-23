@@ -15,39 +15,120 @@
     <script src="data/document.js"></script>
 <!--    <script src="resources/scripts/prototypePost.js"></script>-->
     <script src="files/home/data.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.0.js"></script>
-    <script src="bootstrap/js/bootstrap.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
 
     <script type="text/javascript">
       $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
       $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
       $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
 
+      var stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+
       function voucherClick(tag) {
+        var detailPStr = "";
         switch (tag) {
           case 0:
-            console.log("0");
+            detailPStr = "You get a 10% off discount voucher! You can use it to purchase 1000 Diamonds with just $9.";
             break;
           case 1:
-            console.log("1");
+            detailPStr = "You get a 15% off discount voucher! You can use it to purchase 2000 Diamonds with just $17.";
             break;
           case 2:
-            console.log("2");
+            detailPStr = "You get a 20% off discount voucher! You can use it to purchase 5000 Diamonds with just $40.";
             break;
           case 3:
-            console.log("3");
+            detailPStr = "You get a 25% off discount voucher! You can use it to purchase 10000 Diamonds with just $75.";
             break;
           case 4:
-            console.log("4");
+            detailPStr = "You get a 30% off discount voucher! You can use it to purchase 20000 Diamonds with just $140.";
             break;
         }
-        // $('#myModal').on('show.bs.modal', function (event) {
-        //
-        // });
-        $('#myModal').modal('show');
+        $("#detailP").html(detailPStr);
+        // $("#detailD").html("<button class='purchaseButton' id='detailB' onclick='purchase("+tag+")'>Continue</button>");
+        $("#detailD").html("<button class='purchaseButton' id='detailB' onclick='purchase("+tag+")'>Continue</button>");
+        $("#myModal").modal({
+          fadeDuration: 100
+        });
+      }
+      
+      function purchase(tag) {
+        var cardNum = 0;
+        switch (tag) {
+          case 0:
+            break;
+          case 1:
+            break;
+          case 2:
+            break;
+          case 3:
+            break;
+          case 4:
+            break;
+        }
+        purchaseAction(cardNum);
       }
 
+      function purchaseAction(num) {
+        stripe.createPaymentMethod({
+          type: 'card',
+          card: num,
+        }).then(function(result) {
+          // Handle result.error or result.paymentIntent
+        });
+      }
+
+
+
+      // async purchase() {
+      //   const { data, msg, status } = await Server.StripePayInit({
+      //     productId: this.curProduct.productId
+      //   });
+      //   if (status === 0) {
+      //     let secretID = data;
+      //     stripe
+      //             .confirmCardPayment(secretID, {
+      //               payment_method: { card: cardNumber }
+      //             })
+      //             .then(result => {
+      //               if (result.error) {
+      //                 this.$toast(result.error.message);
+      //               } else if (
+      //                       result.paymentIntent &&
+      //                       result.paymentIntent.status === "succeeded"
+      //               ) {
+      //                 this.$toast("Recharge successful");
+      //
+      //                 this.updateUserInfo(this.curProduct.diamond);
+      //               } else {
+      //                 this.$toast("Recharge failed");
+      //               }
+      //             });
+      //   } else {
+      //     this.$toast(msg);
+      //   }
+      // }
+      // },
+
     </script>
+
+    <style>
+      .purchaseButton {
+        background-color: blueviolet;
+        text-font: 38px;
+        color: white;
+        display: block;
+        width: 80%;
+        height: 80px;
+        margin: 30px auto;
+        font-size: 38px;
+        font-weight: 600
+      }
+    </style>
+
   </head>
   <body>
     <div id="base" class="">
@@ -84,13 +165,17 @@
     </div>
 
 
-    <div class="modal fade" tabindex="-1" role="dialog" id="myModal" aria-labelledby="mySmallModalLabel">
-      <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-          ...
-        </div>
+    <div class="modal" id="myModal" style="background-color: black">
+      <div class="modal-content">
+        <p style="font-size: 40px; font-weight: bold; color: white; text-align: center">Congratulations!</p>
+      </div>
+      <div class="modal-content">
+        <p id="detailP" style="font-size: 36px; font-weight: bold; color: white; text-align: center; margin-top: 30px"></p>
+      </div>
+      <div class="pay-button-wrapper" id="detailD">
       </div>
     </div>
+
 
   </body>
 </html>
