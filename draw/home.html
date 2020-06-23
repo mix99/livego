@@ -16,6 +16,9 @@
 <!--    <script src="resources/scripts/prototypePost.js"></script>-->
     <script src="files/home/data.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
+    <link rel="stylesheet" href="resources/css/normalize.css" />
+    <link rel="stylesheet" href="resources/css/global.css" />
+    <script src="resources/js/script.js" defer></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
@@ -26,7 +29,10 @@
       $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
       $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
 
-      var stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+      var baseUrl = "https://api.liveapp.xyz/";
+      let token = "944cd6b34ab9470e876aea2a424ba0fa";
+
+      var stripe = Stripe('pk_live_Zt23ptBqWWJ8as6k2MBUF3xn00XviuaLpZ');
 
       function voucherClick(tag) {
         var detailPStr = "";
@@ -48,70 +54,67 @@
             break;
         }
         $("#detailP").html(detailPStr);
-        // $("#detailD").html("<button class='purchaseButton' id='detailB' onclick='purchase("+tag+")'>Continue</button>");
-        $("#detailD").html("<button class='purchaseButton' id='detailB' onclick='purchase("+tag+")'>Continue</button>");
+        $("#detailD").html("<button class='purchaseButton' id='payment-request-button' onclick='purchase("+tag+")'>Continue</button>");
         $("#myModal").modal({
           fadeDuration: 100
         });
       }
       
       function purchase(tag) {
-        var cardNum = 0;
+        var pid = 0;
         switch (tag) {
           case 0:
+            pid = "com.livemeet.web.1000d";
             break;
           case 1:
+            pid = "com.livemeet.web.2000d";
             break;
           case 2:
+            pid = "com.livemeet.web.5000d";
             break;
           case 3:
+            pid = "com.livemeet.web.10000d";
             break;
           case 4:
+            pid = "com.livemeet.web.20000d";
             break;
         }
-        purchaseAction(cardNum);
+        purchaseAction(pid);
       }
 
-      function purchaseAction(num) {
-        stripe.createPaymentMethod({
-          type: 'card',
-          card: num,
-        }).then(function(result) {
-          // Handle result.error or result.paymentIntent
+      function purchaseAction(pid) {
+        $.ajax({
+          method: 'post',
+          url: baseUrl + 'vFun/stripe/payment/init',
+          headers: {
+            authorization: token
+          },
+          data: JSON.stringify({
+            productId: pid,
+            type: 1
+          }),
+          contentType:'application/json',
+          dataType: 'json',
+          success: function (data) {
+            if (data.status == 0) {
+              var clients = data.data;
+              stripe.confirmCardPayment(clients, {
+                payment_method: {
+                  card: "4242424242424242"
+                },
+              }).then(function(result) {
+                // Handle result.error or result.paymentIntent
+              });
+            } else {
+              // isError = true;
+              // errorMsg = data.msg;
+            }
+          }, error: function () {
+            // isError = true;
+            // errorMsg = 'Net Error!';
+          }
         });
       }
-
-
-
-      // async purchase() {
-      //   const { data, msg, status } = await Server.StripePayInit({
-      //     productId: this.curProduct.productId
-      //   });
-      //   if (status === 0) {
-      //     let secretID = data;
-      //     stripe
-      //             .confirmCardPayment(secretID, {
-      //               payment_method: { card: cardNumber }
-      //             })
-      //             .then(result => {
-      //               if (result.error) {
-      //                 this.$toast(result.error.message);
-      //               } else if (
-      //                       result.paymentIntent &&
-      //                       result.paymentIntent.status === "succeeded"
-      //               ) {
-      //                 this.$toast("Recharge successful");
-      //
-      //                 this.updateUserInfo(this.curProduct.diamond);
-      //               } else {
-      //                 this.$toast("Recharge failed");
-      //               }
-      //             });
-      //   } else {
-      //     this.$toast(msg);
-      //   }
-      // }
-      // },
 
     </script>
 
@@ -175,7 +178,6 @@
       <div class="pay-button-wrapper" id="detailD">
       </div>
     </div>
-
 
   </body>
 </html>
