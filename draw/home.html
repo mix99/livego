@@ -116,9 +116,22 @@
   <script type="text/javascript">
 
     var baseUrl = "https://api.liveapp.xyz/";
-    let token = "944cd6b34ab9470e876aea2a424ba0fa";
 
     var stripe = Stripe('pk_live_Zt23ptBqWWJ8as6k2MBUF3xn00XviuaLpZ');
+
+    function GetRequest() {
+        var url = location.search;
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+    var token =  GetRequest().id;
 
     var elements = stripe.elements();
     var style = {
