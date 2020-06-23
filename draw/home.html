@@ -16,9 +16,6 @@
 <!--    <script src="resources/scripts/prototypePost.js"></script>-->
     <script src="files/home/data.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
-    <link rel="stylesheet" href="resources/css/normalize.css" />
-    <link rel="stylesheet" href="resources/css/global.css" />
-    <script src="resources/js/script.js" defer></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
@@ -28,111 +25,7 @@
       $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
       $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
       $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
-
-      var baseUrl = "https://api.liveapp.xyz/";
-      let token = "944cd6b34ab9470e876aea2a424ba0fa";
-
-      var stripe = Stripe('pk_live_Zt23ptBqWWJ8as6k2MBUF3xn00XviuaLpZ');
-
-      function voucherClick(tag) {
-        var detailPStr = "";
-        switch (tag) {
-          case 0:
-            detailPStr = "You get a 10% off discount voucher! You can use it to purchase 1000 Diamonds with just $9.";
-            break;
-          case 1:
-            detailPStr = "You get a 15% off discount voucher! You can use it to purchase 2000 Diamonds with just $17.";
-            break;
-          case 2:
-            detailPStr = "You get a 20% off discount voucher! You can use it to purchase 5000 Diamonds with just $40.";
-            break;
-          case 3:
-            detailPStr = "You get a 25% off discount voucher! You can use it to purchase 10000 Diamonds with just $75.";
-            break;
-          case 4:
-            detailPStr = "You get a 30% off discount voucher! You can use it to purchase 20000 Diamonds with just $140.";
-            break;
-        }
-        $("#detailP").html(detailPStr);
-        $("#detailD").html("<button class='purchaseButton' id='payment-request-button' onclick='purchase("+tag+")'>Continue</button>");
-        $("#myModal").modal({
-          fadeDuration: 100
-        });
-      }
-      
-      function purchase(tag) {
-        var pid = 0;
-        switch (tag) {
-          case 0:
-            pid = "com.livemeet.web.1000d";
-            break;
-          case 1:
-            pid = "com.livemeet.web.2000d";
-            break;
-          case 2:
-            pid = "com.livemeet.web.5000d";
-            break;
-          case 3:
-            pid = "com.livemeet.web.10000d";
-            break;
-          case 4:
-            pid = "com.livemeet.web.20000d";
-            break;
-        }
-        $.modal.close();
-        $('#paymentDiv').css('display', 'flex');
-  //      purchaseAction(pid);
-      }
-
-      function purchaseAction(pid) {
-        $.ajax({
-          method: 'post',
-          url: baseUrl + 'vFun/stripe/payment/init',
-          headers: {
-            authorization: token
-          },
-          data: JSON.stringify({
-            productId: pid,
-            type: 1
-          }),
-          contentType:'application/json',
-          dataType: 'json',
-          success: function (data) {
-            if (data.status == 0) {
-              var clients = data.data;
-              stripe.confirmCardPayment(clients, {
-                payment_method: {
-                  card: "4242424242424242"
-                },
-              }).then(function(result) {
-                // Handle result.error or result.paymentIntent
-              });
-            } else {
-              // isError = true;
-              // errorMsg = data.msg;
-            }
-          }, error: function () {
-            // isError = true;
-            // errorMsg = 'Net Error!';
-          }
-        });
-      }
-
     </script>
-
-    <style>
-      .purchaseButton {
-        background-color: blueviolet;
-        text-font: 38px;
-        color: white;
-        display: block;
-        width: 80%;
-        height: 80px;
-        margin: 30px auto;
-        font-size: 38px;
-        font-weight: 600
-      }
-    </style>
 
   </head>
   <body>
@@ -181,26 +74,170 @@
       </div>
     </div>
 
-    <div class="sr-root" id="paymentDiv" style="display: none">
-      <div class="sr-main">
-        <form id="payment-form" class="sr-payment-form">
-          <div class="sr-combo-inputs-row">
-            <div class="sr-input sr-card-element" id="card-element"></div>
+    <div class="modal" id="paymentModal" style="background-color: white">
+      <div class="modal-content">
+        <form id="payment-form">
+          <div id="card-element" style="margin-bottom: 30px; margin-top: 20px">
+            <!-- Elements will create input elements here -->
           </div>
-          <div class="sr-field-error" id="card-errors" role="alert"></div>
-          <button id="submit">
-            <div class="spinner hidden" id="spinner"></div>
-            <span id="button-text">Pay</span><span id="order-amount"></span>
-          </button>
+          <div id="cvc-element" style="margin-bottom: 30px">
+          </div>
+          <div id="exp-element" style="margin-bottom: 30px">
+          </div>
+          <div id="card-errors" role="alert"></div>
+
+          <button id="submit" class="purchaseButton" style="margin-top: 60px;">Pay</button>
         </form>
-        <div class="sr-result hidden">
-          <p>Payment completed<br /></p>
-          <pre>
-            <code></code>
-          </pre>
-        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="messageModal" style="background-color: black">
+      <div class="modal-content">
+        <p id="messageP" style="font-size: 40px; font-weight: bold; color: white; text-align: center">Congratulations!</p>
       </div>
     </div>
 
   </body>
+
+  <style>
+    .purchaseButton {
+      background-color: blueviolet;
+      text-font: 38px;
+      color: white;
+      display: block;
+      width: 80%;
+      height: 80px;
+      margin: 30px auto;
+      font-size: 38px;
+      font-weight: 600
+    }
+  </style>
+
+  <script type="text/javascript">
+
+    var baseUrl = "https://api.liveapp.xyz/";
+    let token = "944cd6b34ab9470e876aea2a424ba0fa";
+
+    var stripe = Stripe('pk_live_Zt23ptBqWWJ8as6k2MBUF3xn00XviuaLpZ');
+
+    var elements = stripe.elements();
+    var style = {
+      base: {
+        color: "#32325d",
+        fontSize: "30px",
+        height: "60px",
+      }
+    };
+    var card = elements.create("cardNumber", { style: style });
+    var cardCvc = elements.create("cardCvc", { style });
+    var cardExpiry = elements.create("cardExpiry", { style });
+
+    card.mount("#card-element");
+    cardCvc.mount("#cvc-element");
+    cardExpiry.mount("#exp-element");
+
+    var pid = "";
+    var clients = "";
+    var from = "";
+
+    function voucherClick(tag) {
+      var detailPStr = "";
+      switch (tag) {
+        case 0:
+          detailPStr = "You get a 10% off discount voucher! You can use it to purchase 1000 Diamonds with just $9.";
+          break;
+        case 1:
+          detailPStr = "You get a 15% off discount voucher! You can use it to purchase 2000 Diamonds with just $17.";
+          break;
+        case 2:
+          detailPStr = "You get a 20% off discount voucher! You can use it to purchase 5000 Diamonds with just $40.";
+          break;
+        case 3:
+          detailPStr = "You get a 25% off discount voucher! You can use it to purchase 10000 Diamonds with just $75.";
+          break;
+        case 4:
+          detailPStr = "You get a 30% off discount voucher! You can use it to purchase 20000 Diamonds with just $140.";
+          break;
+      }
+      $("#detailP").html(detailPStr);
+      $("#detailD").html("<button class='purchaseButton' id='payment-request-button' onclick='purchase("+tag+")'>Continue</button>");
+      $("#myModal").modal({
+        fadeDuration: 100
+      });
+    }
+
+    function purchase(tag) {
+      switch (tag) {
+        case 0:
+          pid = "com.livemeet.web.1000d";
+          break;
+        case 1:
+          pid = "com.livemeet.web.2000d";
+          break;
+        case 2:
+          pid = "com.livemeet.web.5000d";
+          break;
+        case 3:
+          pid = "com.livemeet.web.10000d";
+          break;
+        case 4:
+          pid = "com.livemeet.web.20000d";
+          break;
+      }
+      $.modal.close();
+
+      $.ajax({
+        method: 'post',
+        url: baseUrl + 'vFun/stripe/payment/init',
+        headers: {
+          authorization: token
+        },
+        data: JSON.stringify({
+          productId: pid,
+          type: 1
+        }),
+        contentType:'application/json',
+        dataType: 'json',
+        success: function (data) {
+          if (data.status == 0) {
+            clients = data.data;
+            $("#paymentModal").modal({
+              fadeDuration: 100
+            });
+            var form = document.getElementById('payment-form');
+            form.addEventListener('submit', function(ev) {
+              ev.preventDefault();
+              stripe.confirmCardPayment(clients, {
+                payment_method: {
+                  card: card,
+                }
+              }).then(function(result) {
+                if (result.error) {
+                  showMessage(result.error.message);
+                } else {
+                  if (result.paymentIntent.status === 'succeeded') {
+                    showMessage('Success!');
+                  }
+                }
+              });
+            });
+          } else {
+            showMessage(data.msg);
+          }
+        }, error: function () {
+          showMessage('Net Error');
+        }
+      });
+    }
+
+    function showMessage(message) {
+      $("#messageP").text(message);
+      $("#messageModal").modal({
+        fadeDuration: 100
+      });
+      setTimeout(function () { $.modal.close(); }, 3000);
+    }
+
+  </script>
+
 </html>
