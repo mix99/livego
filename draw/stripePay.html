@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Diamond Vouches</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/home/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/prototypePre.js"></script>
+    <script src="data/document.js"></script>
+    <!--    <script src="resources/scripts/prototypePost.js"></script>-->
+    <script src="files/home/data.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+
+    <script type="text/javascript">
+        $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+        $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+        $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+
+</head>
+<body>
+<div id="base" class="">
+</div>
+
+
+<div class="modal" id="myModal" style="background-color: black; max-width: 85%">
+    <div class="modal-content">
+        <p style="font-size: 430%; font-weight: bold; color: white; text-align: center; margin-top: 60px">Congratulations!</p>
+    </div>
+    <div class="modal-content">
+        <p id="detailP" style="font-size: 300%; font-weight: bold; color: white; text-align: center; margin-top: 60px"></p>
+    </div>
+    <div class="pay-button-wrapper" id="detailD">
+    </div>
+</div>
+
+<div class="modal" id="paymentModal" style="background-color: white; max-width: 85%">
+    <div class="modal-content">
+        <form id="payment-form">
+            <div id="card-element" style="margin-bottom: 60px; margin-top: 60px; margin-left: 40px; margin-right: 40px">
+                <!-- Elements will create input elements here -->
+            </div>
+            <div id="cvc-element" style="margin-bottom: 60px; margin-left: 40px; margin-right: 40px">
+            </div>
+            <div id="exp-element" style="margin-bottom: 60px; margin-left: 40px; margin-right: 40px">
+            </div>
+            <div id="card-errors" role="alert"></div>
+            <button id="submit" class="purchaseButton" style="margin-top: 80px;">Pay Now</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="messageModal" style="background-color: black">
+    <div class="modal-content">
+        <p id="messageP" style="font-size: 60px; font-weight: bold; color: white; text-align: center"></p>
+    </div>
+</div>
+
+<div class="modal" id="successModal" style="background-color: black">
+    <div class="modal-content">
+        <p style="font-size: 280%; font-weight: bold; color: white; text-align: center; margin-top: 30px">Payment Success!</p>
+    </div>
+    <div class="modal-content">
+        <p id="successModalP" style="font-size: 200%; font-weight: bold; color: white; text-align: center; margin-top: 40px">Check Diamonds in your wallet.</p>
+    </div>
+</div>
+
+</body>
+
+<style>
+    .purchaseButton {
+        background-color: blueviolet;
+        text-font: 38px;
+        color: white;
+        display: block;
+        width: 80%;
+        height: 120px;
+        margin: 50px auto;
+        font-size: 50px;
+        font-weight: 600;
+        border-radius: 8px
+    }
+</style>
+
+<script type="text/javascript">
+    var stripe = Stripe('pk_live_Zt23ptBqWWJ8as6k2MBUF3xn00XviuaLpZ');
+    function GetRequest() {
+        var url = location.search;
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+    var token = GetRequest().token;
+    var elements = stripe.elements();
+    var style = {
+        base: {
+            color: "#32325d",
+            fontSize: "50px",
+            height: "60px",
+        }
+    };
+    var card = elements.create("cardNumber", { style: style });
+    var cardCvc = elements.create("cardCvc", { style });
+    var cardExpiry = elements.create("cardExpiry", { style });
+
+    card.mount("#card-element");
+    cardCvc.mount("#cvc-element");
+    cardExpiry.mount("#exp-element");
+
+    $("#paymentModal").modal({
+        showClose: false,
+        fadeDuration: 100
+    });
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function(ev) {
+        ev.preventDefault();
+        stripe.confirmCardPayment(token, {
+            payment_method: {
+                card: card,
+            }
+        }).then(function(result) {
+            if (result.error) {
+                showMessage(result.error.message);
+            } else {
+                if (result.paymentIntent.status === 'succeeded') {
+                    showSuccess();
+                }
+            }
+        });
+    });
+
+    function showSuccess() {
+        $("#successModal").modal({
+            showClose: false,
+            fadeDuration: 100
+        });
+        setTimeout(function () { $.modal.close(); }, 3000);
+    }
+
+    function showMessage(message) {
+        $("#messageP").text(message);
+        $("#messageModal").modal({
+            showClose: false,
+            fadeDuration: 100
+        });
+        setTimeout(function () { $.modal.close(); }, 3000);
+    }
+
+</script>
+
+</html>
